@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SORCH | Painel</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
+  <style>
+    .border-white_color {
+      --tw-border-opacity: 1;
+      border-color: theme('colors.white_color');
+    }
+    .border-emphasis {
+      --tw-border-opacity: 1;
+      border-color: theme('colors.emphasis');
+    }
+    .border-font_color {
+      --tw-border-opacity: 1;
+      border-color: theme('colors.font_color');
+    }
+
+
+
+
+
+    .checkbox-custom {
+      width: 1.5rem; /* Ajuste a largura conforme necessário */
+      height: 1.5rem; /* Ajuste a altura conforme necessário */
+      appearance: none;
+      background-color: #fff;
+      border: 2px solid #322745;
+      border-radius: 0.25rem;
+      display: flex;
+      position: relative;
+      cursor: pointer;
+    }
+    .checkbox-custom:checked {
+      background-color: #322745;
+    }
+    .checkbox-custom:checked::after {
+      content: '';
+      position: absolute;
+      left: 0.4rem;
+      width: 0.5rem;
+      height: 1rem;
+      border: solid #fff;
+      border-width: 0 0.2rem 0.2rem 0;
+      transform: rotate(45deg);
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            color_white: '#fffff',
+            emphasis: '#322745',
+            font_color: '#281F38',
+          },
+          fontFamily: {
+            anton_sc: ["Anton SC", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="flex justify-center items-center flex-col mt-10">
+    <div class="mb-10 font-bold text-emphasis font-anton_sc text-4xl">SORCH</div>
+    
+   <div class="w-80">
+    <div>
+        <input type="text" name="searchName" id="searchName" placeholder="Buscar..." class="w-full h-11 mb-20 pl-3 border border-black/50 rounded-lg">
+    </div>
+
+    <div class="flex justify-between">
+        <div class="w-16 text-center cursor-pointer">
+            <button class="w-full h-16 bg-emphasis flex justify-center items-center rounded-lg text-white">
+                <span class="material-symbols-outlined">
+                    person_add
+                </span>
+            </button>
+            <p class="text-font_color">Cadastrar</p>
+        </div>
+        <div class="w-16 text-center cursor-pointer">
+            <button class="w-full h-16 bg-emphasis flex justify-center items-center rounded-lg text-white">
+                <span class="material-symbols-outlined">
+                    autorenew
+                </span>
+            </button>
+            <p class="text-font_color">Sortear</p>
+        </div>
+        <div class="w-16 text-center cursor-pointer">
+            <button class="w-full h-16 bg-emphasis flex justify-center items-center rounded-lg text-white">
+                <span class="material-symbols-outlined">
+                    picture_as_pdf
+                </span>
+            </button>
+            <p class="text-font_color">Gerar PDF</p>
+        </div>
+        <div class="w-16 text-center cursor-pointer">
+            <button class="w-full h-16 bg-emphasis flex justify-center items-center rounded-lg text-white">
+                <span class="material-symbols-outlined">
+                    recycling
+                </span>
+            </button>
+            <p class="text-font_color">Limpar presenças</p>
+        </div>
+    </div>
+
+    <div class="flex flex-col mt-11">
+        <div class="flex justify-between font-bold text-font_color">
+            <p>Nome</p>
+            <p>Presença</p>
+        </div>
+        <div class="text-font_color">
+                <div class="flex justify-between pt-2 pr-5 pb-2">
+                    <div>Matheus Henrique Lopes</div>
+                    <div>
+                        <input type="checkbox" class="checkbox-custom">
+                    </div>
+                </div>
+                <div class="flex justify-between pt-2 pr-5 pb-2">
+                    <div>Isabela Rodrigues de Paula</div>
+                    <div>
+                        <input type="checkbox" class="checkbox-custom">
+                    </div>
+                </div>
+        </div>
+    </div>
+   </div>
+  </div>
+  
+  <div class="text-font_color cursor-pointer">
+    <a href="./login.html">
+        <span class="material-symbols-outlined text-4xl absolute right-5 bottom-5">
+            logout
+        </span>
+    </a>
+  </div>
+</body>
+</html>
