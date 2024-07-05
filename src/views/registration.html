@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SORCH | Cadastrar</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+  <style>
+    .border-white_color {
+      --tw-border-opacity: 1;
+      border-color: theme('colors.white_color');
+    }
+    .border-emphasis {
+      --tw-border-opacity: 1;
+      border-color: theme('colors.emphasis');
+    }
+    .border-font_color {
+      --tw-border-opacity: 1;
+      border-color: theme('colors.font_color');
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            white_color: '#da373d',
+            emphasis: '#322745',
+            font_color: '#281F38',
+          },
+          fontFamily: {
+            anton_sc: ["Anton SC", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="flex justify-center items-center flex-col h-screen">
+    <div class="mb-16 font-bold text-emphasis font-anton_sc text-6xl">SORCH</div>
+    
+    <div class="flex flex-col w-full max-w-xs">
+        <form class="flex flex-col gap-3 mb-14">
+            <div class="flex flex-col">
+                <label for="" class="text-font_color font-bold">Nome *</label>
+                <input type="email" name="email" id="userEmail" class="h-11 pl-3 border-font_color border rounded-lg">
+            </div>
+            <div class="flex flex-col">
+                <label for="" class="text-font_color font-bold">Data de nascimento *</label>
+                <input type="password" name="password" id="userPassword" class="h-11 pl-3 border-font_color border rounded-lg">
+            </div>
+            <div class="flex flex-col">
+                <label for="" class="text-font_color font-bold">Contato/WhatsApp *</label>
+                <input type="password" name="password" id="userPassword" class="h-11 pl-3 border-font_color border rounded-lg">
+            </div>
+            <div class="flex justify-between">
+                <div class="flex flex-col">
+                    <label for="checkbox">Presença</label>
+                    <input type="checkbox" name="checkbox" class="checkbox-custom">
+                </div>
+                <div class="flex flex-col">
+                    <label for="" class="text-font_color font-bold">Número</label>
+                    <input type="number" name="numer" id="userPassword" class="h-11 pl-3 border-font_color border rounded-lg">
+                </div>
+            </div>
+        </form>
+    
+        <div class="mb-3">
+            <a href="./painel.html" class="w-full h-11 flex justify-center items-center rounded-lg font-bold bg-black bg-emphasis text-white cursor-pointer">
+                Cadastrar
+            </a>
+        </div>
+        <div>
+            <a href="./painel.html" class="w-full h-11 flex justify-center items-center rounded-lg font-bold bg-trasparent text-font_color border border-emphasis cursor-pointer">
+                Cancelar
+            </a>
+        </div>
+    </div>
+  </div>
+</body>
+</html>
