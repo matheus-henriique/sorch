@@ -23,6 +23,32 @@
       --tw-border-opacity: 1;
       border-color: theme('colors.font_color');
     }
+
+
+    .checkbox-custom {
+      width: 1.5rem; /* Ajuste a largura conforme necessário */
+      height: 1.5rem; /* Ajuste a altura conforme necessário */
+      appearance: none;
+      background-color: #fff;
+      border: 2px solid #322745;
+      border-radius: 0.25rem;
+      display: flex;
+      position: relative;
+      cursor: pointer;
+    }
+    .checkbox-custom:checked {
+      background-color: #322745;
+    }
+    .checkbox-custom:checked::after {
+      content: '';
+      position: absolute;
+      left: 0.4rem;
+      width: 0.5rem;
+      height: 1rem;
+      border: solid #fff;
+      border-width: 0 0.2rem 0.2rem 0;
+      transform: rotate(45deg);
+    }
   </style>
   <script>
     tailwind.config = {
@@ -53,15 +79,15 @@
             </div>
             <div class="flex flex-col">
                 <label for="" class="text-font_color font-bold">Data de nascimento *</label>
-                <input type="password" name="password" id="userPassword" class="h-11 pl-3 border-font_color border rounded-lg">
+                <input type="dateBirth" name="dateBirth" id="userDateBirth" class="h-11 pl-3 border-font_color border rounded-lg">
             </div>
             <div class="flex flex-col">
                 <label for="" class="text-font_color font-bold">Contato/WhatsApp *</label>
-                <input type="password" name="password" id="userPassword" class="h-11 pl-3 border-font_color border rounded-lg">
+                <input type="text" name="contact" id="userContact" class="h-11 pl-3 border-font_color border rounded-lg">
             </div>
             <div class="flex justify-between">
                 <div class="flex flex-col">
-                    <label for="checkbox">Presença</label>
+                    <label for="checkbox" class="text-font_color font-bold">Presença</label>
                     <input type="checkbox" name="checkbox" class="checkbox-custom">
                 </div>
                 <div class="flex flex-col">
