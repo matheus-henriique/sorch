@@ -76,19 +76,18 @@ function validarNome(campoNome) {
 function validarData(campoData) {
     const data = campoData.val().trim();
   
-    const regexData = /^\d{2}\/\d{2}\/\d{4}$/;
+    const regexData = /^\d{4}-\d{2}-\d{2}$/;
     if (!regexData.test(data)) {
       campoData.addClass("border-red-500");
       $("#msgErrorFielData").remove();
-      $(`<p id="msgErrorFielData" class="text-red-500" >O formato da data está incorreto. Use dd/mm/aaaa.</p>`).insertAfter(campoData);
+      $(`<p id="msgErrorFielData" class="text-red-500">O formato da data está incorreto. Use aaaa-mm-dd.</p>`).insertAfter(campoData);
       return false;
     }
   
     campoData.removeClass("border-red-500");
     $("#msgErrorFielData").remove();
     return true;
-  }
-  
+} 
 
 function validarContato(campoContato) {
     const valorContato = campoContato.val().replace(/[\s.-]/g, "");
