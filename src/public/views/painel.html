@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SORCH | Painel</title>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <link rel="stylesheet" href="/css/main.css">
+
+  <script src="/scripts/main.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,32 +82,13 @@
         </div>
     </div>
 
-    <div class="flex flex-col mt-11">
+    <div class="flex flex-col my-11">
         <div class="flex justify-between font-bold text-font_color">
             <p>Nome</p>
             <p>Presença</p>
         </div>
-        <div class="text-font_color">
-                <div class="flex justify-between pt-2 pr-5 pb-2">
-                    <div>
-                      <a href="./update.html">
-                        Matheus Henrique Lopes
-                      </a>
-                    </div>
-                    <div>
-                        <input type="checkbox" class="checkbox-custom">
-                    </div>
-                </div>
-                <div class="flex justify-between pt-2 pr-5 pb-2">
-                    <div>
-                      <a href="./update.html">
-                        Isabela Rodrigues de Paula
-                      </a>
-                    </div>
-                    <div>
-                        <input type="checkbox" class="checkbox-custom">
-                    </div>
-                </div>
+        <div id="listParticipants" class="max-h-80 overflow-x-hidden text-font_color">
+                <p class="msg-no-participants text-center mt-5">Sem participantes</p>
         </div>
     </div>
    </div>
