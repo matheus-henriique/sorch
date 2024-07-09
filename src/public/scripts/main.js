@@ -63,6 +63,12 @@ function remove_html_popup_alert(){
     $("#popupAlert").remove();
 }
 
+/**
+ * 
+ *  VALIDATION OF THE INPUTS
+ * 
+ */
+
 function validarNome(campoNome) {
     if (campoNome.val().trim() === "") {
       campoNome.addClass("border-red-500");
@@ -126,17 +132,41 @@ function validarContato(campoContato) {
 
 /**
  * 
+ *  CRUD PARTICIPANTS
+ * 
+ */
+
+async function getAllParticipants(){
+
+    if(!sessionStorage.getItem("participants")){
+        return [];
+    } else {
+        return JSON.parse(sessionStorage.getItem("participants"));
+    }
+}
+
+async function getParticipantById(id) {
+    if(!sessionStorage.getItem("participants")){
+        return null;
+    } else {
+        let participants = JSON.parse(sessionStorage.getItem("participants"));
+
+        return participants.find(participant => participant.id === id); 
+    }
+}
+
+
+/**
+ * 
  *  CREATE LIST OF PARTICIPANTS
  * 
  */
 
 function html_create_list_participants(participant) {
     let html = `
-        <div class="flex justify-between pt-2 pr-5 pb-2">
-            <div>
-                <a href="./update.html">
-                    ${participant.name}
-                </a>
+        <div id="${participant.id}" class="flex justify-between pt-2 pr-5 pb-2">
+            <div class="name-participant w-full cursor-pointer">
+                ${participant.name}
             </div>
             <div>
                 <input type="checkbox" ${participant.presence ? "checked" : `presence='${participant.presence}'`} class="checkbox-custom">
@@ -145,13 +175,21 @@ function html_create_list_participants(participant) {
     `;
 
     $("#listParticipants").append(html);
+
+    $(`#${participant.id}`).on('click', (e) => {
+        if(e.target.classList[0] === "name-participant") {
+            let id = e.target.parentElement.id;
+
+            window.location.href = `/src/public/views/update.html?id=${id}`;
+        }
+    });
 }
   
 function create_list_participants(participants) {
 
     if(participants.length > 0) {
         $(".msg-no-participants").remove();
-        participants.forEach(e => {
+        participants.forEach((e) => {
             html_create_list_participants(e)
         });
     } else {
@@ -194,24 +232,65 @@ async function saveParticipant(participant){
     if(!participant)return;
 
     if(!sessionStorage.getItem("participants")){
+        participant.id = 0;
         sessionStorage.setItem("participants", JSON.stringify([participant]));
     } else {
         let participants = JSON.parse(sessionStorage.getItem("participants"));
+        participant.id = participants.length;
         participants.unshift(participant);
 
         sessionStorage.setItem("participants", JSON.stringify(participants));
     }
 }
 
-function getParticipant(){
 
-    if(!sessionStorage.getItem("participants")){
-        return [];
-    } else {
-        return JSON.parse(sessionStorage.getItem("participants"));
+/**
+ * 
+ *  UPDATE
+ * 
+ */
+
+let updateParticipant = null; 
+
+async function getIdByParam(){
+    return parseInt(window.location.search.split("")[4]);
+}
+
+async function setValuesInput(fullName, dateOfBirth, contact, presence, drawNumber){
+    if(!fullName || !dateOfBirth || !contact)return;
+
+    console.log({fullName, dateOfBirth, contact, presence, drawNumber});
+
+    $("#userEmail").val(fullName)
+    $("#userDateBirth").val(dateOfBirth)
+    $("#userContact").val(contact)
+
+    if(drawNumber) $("#sortNumber").val(drawNumber)
+    if(presence) $('input[type="checkbox"]').prop('checked', true);
+}
+
+async function loadDataParticipant(){
+    if(window.location.pathname !== "/src/public/views/update.html") return;
+
+    try {
+        let idParticipant = await getIdByParam();
+
+        if(idParticipant == null) return;
+        
+        updateParticipant = await getParticipantById(idParticipant);
+        setValuesInput(updateParticipant.name, updateParticipant.date_of_birth, updateParticipant.contact, updateParticipant.presence, updateParticipant.draw_number);
+    } catch (error) {
+        console.log(error);    
     }
 }
-  
+
+
+/**
+ * 
+ *  EVENTS OF THE CLICK
+ * 
+ */
+
 $("#updatePerson").on('click', () => {
     html_loading();
 });
@@ -223,14 +302,15 @@ $("#deletePerson").on('click', () => {
 $("#registration").on('click', () => {
     if( validarNome($("#userName")) && validarData($("#userDateBirth")) && validarContato($("#userContact")) ){
 
-        registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#presence").val(), $("#sortnumber").val()).then(()=>{
-            window.location.href = '/views/painel.html';
+        registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#sortNumber").val()).then(()=>{
+            window.location.href = '/src/public/views/painel.html';
         })
     }
 });
 
  	
 
-$(document).ready(() => {
-   create_list_participants(getParticipant());
+$(document).ready(async () => {
+   create_list_participants(await getAllParticipants());
+   loadDataParticipant();
 });
