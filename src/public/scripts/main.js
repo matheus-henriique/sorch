@@ -200,15 +200,13 @@ async function saveParticipant(participant){
         participants.unshift(participant);
 
         sessionStorage.setItem("participants", JSON.stringify(participants));
-
-        window.location.href = '/views/painel.html';
     }
 }
 
 function getParticipant(){
 
     if(!sessionStorage.getItem("participants")){
-        return null;
+        return [];
     } else {
         return JSON.parse(sessionStorage.getItem("participants"));
     }
@@ -224,13 +222,11 @@ $("#deletePerson").on('click', () => {
 
 $("#registration").on('click', () => {
     if( validarNome($("#userName")) && validarData($("#userDateBirth")) && validarContato($("#userContact")) ){
-        registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#presence").val(), $("#sortnumber").val())
-    }
-    
-    
-    
 
-    // "./painel.html"
+        registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#presence").val(), $("#sortnumber").val()).then(()=>{
+            window.location.href = '/views/painel.html';
+        })
+    }
 });
 
  	
