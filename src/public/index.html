@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SORCH | Login</title>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="./css/main.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,12 +47,43 @@
             </div>
         </form>
     
-        <div>
-            <a href="./views/painel.html" class="w-full h-11 flex justify-center items-center rounded-lg font-bold mt-14 bg-black bg-emphasis text-white cursor-pointer">
-                Login
-            </a>
+        <div id="login" class="w-full h-11 flex justify-center items-center rounded-lg font-bold mt-14 bg-black bg-emphasis text-white cursor-pointer">
+            Login
         </div>
     </div>
   </div>
 </body>
+
+<script>
+  const user = {
+    username: "flordoparaiso@gmail.com",
+    password: "km12"
+  }
+    function login(username, password) {
+
+      if(!validarEmail(username) && username !== user.username) {
+        return messageError("E-mail ou senha inválido.", $("#userPassword"));
+      }
+
+      if(password !== user.password) {
+        return messageError("E-mail ou senha inválido.", $("#userPassword"));
+      }
+
+      window.location.href = `./views/painel.html`;
+    }
+
+    function validarEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+
+    function messageError(message, element) {
+      $("#msgErrorFiel").remove();
+      $(`<p id="msgErrorFiel" class="mt-5 text-red-500">${message}</p>`).insertAfter(element);
+    }
+
+    $("#login").on('click', () => {
+      login($("#userEmail").val(), $("#userPassword").val());
+    });
+</script>
 </html>
