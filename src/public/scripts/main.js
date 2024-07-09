@@ -180,7 +180,7 @@ function html_create_list_participants(participant) {
         if(e.target.classList[0] === "name-participant") {
             let id = e.target.parentElement.id;
 
-            window.location.href = `/src/public/views/update.html?id=${id}`;
+            window.location.href = `/views/update.html?id=${id}`;
         }
     });
 }
