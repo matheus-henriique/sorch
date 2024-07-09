@@ -270,7 +270,7 @@ async function setValuesInput(fullName, dateOfBirth, contact, presence, drawNumb
 }
 
 async function loadDataParticipant(){
-    if(window.location.pathname !== "/src/public/views/update.html") return;
+    if(window.location.pathname !== "/views/update.html") return;
 
     try {
         let idParticipant = await getIdByParam();
