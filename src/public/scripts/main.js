@@ -1,117 +1,13 @@
-const participants = [
-    {
-        name: "John Doe",
-        date_of_birth: new Date("1990-01-01"),
-        contact: "john.doe@example.com",
-        presence: true,
-        draw_number: 1,
-        created_at: new Date()
-    },
-    {
-        name: "Jane Smith",
-        date_of_birth: new Date("1985-05-15"),
-        contact: "jane.smith@example.com",
-        presence: false,
-        draw_number: 2,
-        created_at: new Date()
-    },
-    {
-        name: "Alice Johnson",
-        date_of_birth: new Date("1992-08-25"),
-        contact: "alice.johnson@example.com",
-        presence: true,
-        draw_number: 3,
-        created_at: new Date()
-    },
-    {
-        name: "John Doe",
-        date_of_birth: new Date("1990-01-01"),
-        contact: "john.doe@example.com",
-        presence: true,
-        draw_number: 1,
-        created_at: new Date()
-    },
-    {
-        name: "Jane Smith",
-        date_of_birth: new Date("1985-05-15"),
-        contact: "jane.smith@example.com",
-        presence: false,
-        draw_number: 2,
-        created_at: new Date()
-    },
-    {
-        name: "Alice Johnson",
-        date_of_birth: new Date("1992-08-25"),
-        contact: "alice.johnson@example.com",
-        presence: true,
-        draw_number: 3,
-        created_at: new Date()
-    },
-    {
-        name: "John Doe",
-        date_of_birth: new Date("1990-01-01"),
-        contact: "john.doe@example.com",
-        presence: true,
-        draw_number: 1,
-        created_at: new Date()
-    },
-    {
-        name: "Jane Smith",
-        date_of_birth: new Date("1985-05-15"),
-        contact: "jane.smith@example.com",
-        presence: false,
-        draw_number: 2,
-        created_at: new Date()
-    },
-    {
-        name: "Alice Johnson",
-        date_of_birth: new Date("1992-08-25"),
-        contact: "alice.johnson@example.com",
-        presence: true,
-        draw_number: 3,
-        created_at: new Date()
-    },
-    {
-        name: "Alice Johnson",
-        date_of_birth: new Date("1992-08-25"),
-        contact: "alice.johnson@example.com",
-        presence: true,
-        draw_number: 3,
-        created_at: new Date()
-    },
-    {
-        name: "Alice Johnson",
-        date_of_birth: new Date("1992-08-25"),
-        contact: "alice.johnson@example.com",
-        presence: true,
-        draw_number: 3,
-        created_at: new Date()
-    },
-    {
-        name: "Alice Johnson",
-        date_of_birth: new Date("1992-08-25"),
-        contact: "alice.johnson@example.com",
-        presence: true,
-        draw_number: 3,
-        created_at: new Date()
-    },
-    {
-        name: "Alice Johnson",
-        date_of_birth: new Date("1992-08-25"),
-        contact: "alice.johnson@example.com",
-        presence: true,
-        draw_number: 3,
-        created_at: new Date()
-    },
-    {
-        name: "Alice Johnson",
-        date_of_birth: new Date("1992-08-25"),
-        contact: "alice.johnson@example.com",
-        presence: true,
-        draw_number: 3,
-        created_at: new Date()
-    }
-];
+// const participants = [
+//     {
+//         name: "John Doe",
+//         date_of_birth: new Date("1990-01-01"),
+//         contact: "john.doe@example.com",
+//         presence: true,
+//         draw_number: 1,
+//         created_at: new Date()
+//     }
+// ];
 
 function html_popup_alert(message){
     if(!message)return;
@@ -243,7 +139,7 @@ function html_create_list_participants(participant) {
                 </a>
             </div>
             <div>
-                <input type="checkbox" class="checkbox-custom">
+                <input type="checkbox" ${participant.presence ? "checked" : `presence='${participant.presence}'`} class="checkbox-custom">
             </div>
         </div>
     `;
@@ -253,7 +149,7 @@ function html_create_list_participants(participant) {
   
 function create_list_participants(participants) {
 
-    if(participants.length > 0 || !participants) {
+    if(participants.length > 0) {
         $(".msg-no-participants").remove();
         participants.forEach(e => {
             html_create_list_participants(e)
@@ -262,6 +158,59 @@ function create_list_participants(participants) {
         $(".msg-no-participants").remove();
         $("#listParticipants").append(`<p class="msg-no-partipants text-center mt-5">Sem participantes</p>`);
 
+    }
+}
+
+/**
+ * 
+ *  REGISTRATION
+ * 
+ */
+
+function hasAfterPseudoElement(selector) {
+    const element = $(selector)[0];
+    const style = window.getComputedStyle(element, '::after');
+    const content = style.getPropertyValue('content');
+
+    return content !== '' && content !== 'none';
+}
+
+async function registration(fullName, dateOfBirth, contact, drawNumber) {
+    if(!fullName || !dateOfBirth || !contact)return;
+
+    const user = {
+        name: fullName,
+        date_of_birth: dateOfBirth,
+        contact: contact,
+        presence: hasAfterPseudoElement($("#presence")),
+        draw_number: parseInt(drawNumber),
+        created_at: new Date()
+    };
+
+    await saveParticipant(user);
+}
+
+async function saveParticipant(participant){
+    if(!participant)return;
+
+    if(!sessionStorage.getItem("participants")){
+        sessionStorage.setItem("participants", JSON.stringify([participant]));
+    } else {
+        let participants = JSON.parse(sessionStorage.getItem("participants"));
+        participants.unshift(participant);
+
+        sessionStorage.setItem("participants", JSON.stringify(participants));
+
+        window.location.href = '/views/painel.html';
+    }
+}
+
+function getParticipant(){
+
+    if(!sessionStorage.getItem("participants")){
+        return null;
+    } else {
+        return JSON.parse(sessionStorage.getItem("participants"));
     }
 }
   
@@ -274,9 +223,12 @@ $("#deletePerson").on('click', () => {
 });
 
 $("#registration").on('click', () => {
-    validarNome($("#userName"));
-    validarData($("#userDateBirth"));
-    validarContato($("#userContact"));
+    if( validarNome($("#userName")) && validarData($("#userDateBirth")) && validarContato($("#userContact")) ){
+        registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#presence").val(), $("#sortnumber").val())
+    }
+    
+    
+    
 
     // "./painel.html"
 });
@@ -284,5 +236,5 @@ $("#registration").on('click', () => {
  	
 
 $(document).ready(() => {
-   create_list_participants(participants);
+   create_list_participants(getParticipant());
 });
