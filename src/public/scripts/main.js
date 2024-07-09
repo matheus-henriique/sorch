@@ -303,7 +303,7 @@ $("#registration").on('click', () => {
     if( validarNome($("#userName")) && validarData($("#userDateBirth")) && validarContato($("#userContact")) ){
 
         registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#sortNumber").val()).then(()=>{
-            window.location.href = '/src/public/views/painel.html';
+            window.location.href = '/views/painel.html';
         })
     }
 });
