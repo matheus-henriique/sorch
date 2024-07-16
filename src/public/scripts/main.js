@@ -38,10 +38,8 @@ function html_popup_alert(message){
                     ${message}
                 </p>
                 <div class="flex gap-4">
-                    <button class="w-32 h-11 rounded-lg font-bold bg-black bg-emphasis text-white cursor-pointer">
-                        <a href="../views/painel.html">
-                            Confirmar
-                        </a>
+                    <button id="deleteParticipant" class="w-32 h-11 rounded-lg font-bold bg-black bg-emphasis text-white cursor-pointer">
+                        Confirmar
                     </button>
                     <button id="cancelDelete" class="w-32 h-11 rounded-lg font-bold bg-trasparent text-font_color border border-emphasis cursor-pointer">
                         Cancelar
@@ -52,6 +50,12 @@ function html_popup_alert(message){
     `;
 
     $('body').prepend(element);
+
+    $("#deleteParticipant").on('click', () => {
+        deleteParticipant(getIdByParam()).then(()=>{
+            window.location.href = "/views/painel.html";
+        });
+    });
 
     $("#cancelDelete").on('click', () => {
         remove_html_popup_alert();
@@ -197,7 +201,7 @@ async function addNewParticipant(user) {
         console.log(error);
     }
 }
-  
+
 async function updateParticipantFunc(id, user) {
     try{
         const res = await $.ajax({
@@ -213,18 +217,36 @@ async function updateParticipantFunc(id, user) {
         console.log(error);
     }
 }
-  
-  
 
-// async function getParticipantById(id) {
-//     if(!sessionStorage.getItem("participants")){
-//         return null;
-//     } else {
-//         let participants = JSON.parse(sessionStorage.getItem("participants"));
+async function updateParticipantPresence(id, isPresent) {
+    try{
+        const res = await $.ajax({
+          url: url + id + "/presence",
+          method: 'PUT',
+          data: JSON.stringify({
+            isPresent: isPresent
+          }),
+          contentType: 'application/json',
+        });
 
-//         return participants.find(participant => participant.id === id); 
-//     }
-// }
+        return res;
+        
+    }catch(error){
+        console.log(error);
+    }
+}
+
+async function deleteParticipant(id) {
+    try{
+        const res = await $.ajax({
+          url: url + id,
+          method: 'DELETE'
+        });
+        
+    }catch(error){
+        console.log(error);
+    }
+}
 
 
 /**
@@ -280,7 +302,7 @@ function html_create_list_participants(participant) {
                 ${participant.name}
             </div>
             <div>
-                <input type="checkbox" ${participant.presence ? "checked" : `presence='${participant.presence}'`} class="checkbox-custom">
+                <input id="present_${participant._id}" type="checkbox" ${participant.presence ? "checked" : `presence='${participant.presence}'`} class="checkbox-custom">
             </div>
         </div>
     `;
@@ -290,8 +312,15 @@ function html_create_list_participants(participant) {
     $(`#${participant._id}`).on('click', (e) => {
         if(e.target.classList[0] === "name-participant") {
             let id = e.target.parentElement.id;
-
+            
             window.location.href = `/views/update.html?id=${id}`;
+        }
+        
+        if(e.target.classList[0] === "checkbox-custom") {
+            let id = e.target.parentElement.parentElement.id;
+            let isPresent = e.target.attributes[2].value == "false" ? true : false;
+
+            updateParticipantPresence(id, isPresent);
         }
     });
 }
@@ -347,7 +376,7 @@ async function registration(fullName, dateOfBirth, contact, drawNumber) {
 
 let updateParticipant = null; 
 
-async function getIdByParam(){
+function getIdByParam(){
     return window.location.search.split("=")[1];
 }
 
@@ -368,7 +397,7 @@ async function loadDataParticipant(){
     // if(window.location.pathname !== "/views/update.html") return;
 
     try {
-        let idParticipant = await getIdByParam();
+        let idParticipant = getIdByParam();
 
         if(idParticipant == null) return;
         
@@ -386,7 +415,7 @@ async function loadDataParticipant(){
  * 
  */
 
-$("#updatePerson").on('click', async () => {
+$("#updatePerson").on('click', () => {
     const user = {
         name: $("#userName").val(),
         date_of_birth: $("#userDateBirth").val(),
@@ -395,7 +424,7 @@ $("#updatePerson").on('click', async () => {
         draw_number: parseInt($("#sortNumber").val()),
     };
     html_loading();
-    updateParticipantFunc(await getIdByParam(), user).then(()=>{
+    updateParticipantFunc(getIdByParam(), user).then(()=>{
         window.location.href = '/views/painel.html';
     });
 });
