@@ -72,10 +72,6 @@ function html_loading(){
     `;
 
     $('body').prepend(element);
-
-    setTimeout(() => {
-        window.location.href = '/src/views/painel.html';
-    }, 1000);
 }
 
 function remove_html_popup_alert(){
@@ -154,25 +150,81 @@ function validarContato(campoContato) {
  *  CRUD PARTICIPANTS
  * 
  */
+const url = 'https://api-sorch.onrender.com/api/persons/';
 
-async function getAllParticipants(){
+async function getAllParticipants() {
+    try{
+        const res = await $.ajax({
+          url: url,
+          method: 'GET',
+          dataType: 'json',
+        });
 
-    if(!sessionStorage.getItem("participants")){
-        return [];
-    } else {
-        return JSON.parse(sessionStorage.getItem("participants"));
+        return res;
+    } catch(error){
+        console.log(error);
     }
 }
 
 async function getParticipantById(id) {
-    if(!sessionStorage.getItem("participants")){
-        return null;
-    } else {
-        let participants = JSON.parse(sessionStorage.getItem("participants"));
+    if(!id)return;
 
-        return participants.find(participant => participant.id === id); 
+    try{
+        const res = await $.ajax({
+          url: url + id, // Replace with your actual API endpoint
+          method: 'GET',
+          dataType: 'json',
+        });
+
+        return res;
+    } catch(error){
+        console.log(error);
     }
 }
+
+async function addNewParticipant(user) {
+    try{
+        const res = await $.ajax({
+          url: url,
+          method: 'POST',
+          data: JSON.stringify({
+            user: user
+          }),
+          contentType: 'application/json',
+        });
+        
+    }catch(error){
+        console.log(error);
+    }
+}
+  
+async function updateParticipantFunc(id, user) {
+    try{
+        const res = await $.ajax({
+          url: url + id,
+          method: 'PUT',
+          data: JSON.stringify({
+            user: user
+          }),
+          contentType: 'application/json',
+        });
+        
+    }catch(error){
+        console.log(error);
+    }
+}
+  
+  
+
+// async function getParticipantById(id) {
+//     if(!sessionStorage.getItem("participants")){
+//         return null;
+//     } else {
+//         let participants = JSON.parse(sessionStorage.getItem("participants"));
+
+//         return participants.find(participant => participant.id === id); 
+//     }
+// }
 
 
 /**
@@ -223,7 +275,7 @@ async function create_search_list_participants(participants) {
 
 function html_create_list_participants(participant) {
     let html = `
-        <div id="${participant.id}" class="flex justify-between pt-2 pr-5 pb-2">
+        <div id="${participant._id}" class="flex justify-between pt-2 pr-5 pb-2">
             <div class="name-participant w-full cursor-pointer">
                 ${participant.name}
             </div>
@@ -235,7 +287,7 @@ function html_create_list_participants(participant) {
 
     $("#listParticipants").append(html);
 
-    $(`#${participant.id}`).on('click', (e) => {
+    $(`#${participant._id}`).on('click', (e) => {
         if(e.target.classList[0] === "name-participant") {
             let id = e.target.parentElement.id;
 
@@ -281,25 +333,9 @@ async function registration(fullName, dateOfBirth, contact, drawNumber) {
         contact: contact,
         presence: hasAfterPseudoElement($("#presence")),
         draw_number: parseInt(drawNumber),
-        created_at: new Date()
     };
 
-    await saveParticipant(user);
-}
-
-async function saveParticipant(participant){
-    if(!participant)return;
-
-    if(!sessionStorage.getItem("participants")){
-        participant.id = 0;
-        sessionStorage.setItem("participants", JSON.stringify([participant]));
-    } else {
-        let participants = JSON.parse(sessionStorage.getItem("participants"));
-        participant.id = participants.length;
-        participants.unshift(participant);
-
-        sessionStorage.setItem("participants", JSON.stringify(participants));
-    }
+    await addNewParticipant(user);
 }
 
 
@@ -312,7 +348,7 @@ async function saveParticipant(participant){
 let updateParticipant = null; 
 
 async function getIdByParam(){
-    return parseInt(window.location.search.split("")[4]);
+    return window.location.search.split("=")[1];
 }
 
 async function setValuesInput(fullName, dateOfBirth, contact, presence, drawNumber){
@@ -320,7 +356,7 @@ async function setValuesInput(fullName, dateOfBirth, contact, presence, drawNumb
 
     console.log({fullName, dateOfBirth, contact, presence, drawNumber});
 
-    $("#userEmail").val(fullName)
+    $("#userName").val(fullName)
     $("#userDateBirth").val(dateOfBirth)
     $("#userContact").val(contact)
 
@@ -329,7 +365,7 @@ async function setValuesInput(fullName, dateOfBirth, contact, presence, drawNumb
 }
 
 async function loadDataParticipant(){
-    if(window.location.pathname !== "/views/update.html") return;
+    // if(window.location.pathname !== "/views/update.html") return;
 
     try {
         let idParticipant = await getIdByParam();
@@ -350,8 +386,18 @@ async function loadDataParticipant(){
  * 
  */
 
-$("#updatePerson").on('click', () => {
+$("#updatePerson").on('click', async () => {
+    const user = {
+        name: $("#userName").val(),
+        date_of_birth: $("#userDateBirth").val(),
+        contact: $("#userContact").val(),
+        presence: hasAfterPseudoElement($("#presence")),
+        draw_number: parseInt($("#sortNumber").val()),
+    };
     html_loading();
+    updateParticipantFunc(await getIdByParam(), user).then(()=>{
+        window.location.href = '/views/painel.html';
+    });
 });
 
 $("#deletePerson").on('click', () => {
