@@ -1,5 +1,24 @@
 // const participants = [
 //     {
+//         id: 0,
+//         name: "John Doe",
+//         date_of_birth: new Date("1990-01-01"),
+//         contact: "john.doe@example.com",
+//         presence: true,
+//         draw_number: 1,
+//         created_at: new Date()
+//     },
+//     {
+//         id: 1,
+//         name: "John Doe",
+//         date_of_birth: new Date("1990-01-01"),
+//         contact: "john.doe@example.com",
+//         presence: true,
+//         draw_number: 1,
+//         created_at: new Date()
+//     },
+//     {
+//         id: 2,
 //         name: "John Doe",
 //         date_of_birth: new Date("1990-01-01"),
 //         contact: "john.doe@example.com",
@@ -162,6 +181,46 @@ async function getParticipantById(id) {
  * 
  */
 
+function html_create_search_list_participants(participant) {
+    let html = `
+        <div id="${participant.id}" class="flex justify-between px-2 pt-2 pb-2 rounded hover:bg-slate-200">
+            <div class="name-participant w-full cursor-pointer">
+                ${participant.name}
+            </div>
+            <div>
+                <input type="checkbox" ${participant.presence ? "checked" : `presence='${participant.presence}'`} class="checkbox-custom">
+            </div>
+        </div>
+    `;
+
+    $("#boxSearch").append(html);
+
+    // $(`#${participant.id}`).on('click', (e) => {
+    //     if(e.target.classList[0] === "name-participant") {
+    //         let id = e.target.parentElement.id;
+
+    //         window.location.href = `/views/update.html?id=${id}`;
+    //     }
+    // });
+}
+
+async function create_search_list_participants(participants) {
+
+    $("#boxSearch").removeClass("hidden");
+    $("#boxSearch").addClass("block");
+
+    if(participants.length > 0) {
+        $(".msg-no-results").remove();
+        participants.forEach((e) => {
+            html_create_search_list_participants(e)
+        });
+    } else {
+        $(".msg-no-results").remove();
+        $("#boxSearch").append(`<p class="msg-no-results text-center text-slate-500">Sem resultados</p>`);
+
+    }
+}
+
 function html_create_list_participants(participant) {
     let html = `
         <div id="${participant.id}" class="flex justify-between pt-2 pr-5 pb-2">
@@ -308,9 +367,23 @@ $("#registration").on('click', () => {
     }
 });
 
+$("#searchName").on('keyup', async (e) => {
+    // console.log(e.target.value);
+    $("#boxSearch").empty();
+    create_search_list_participants(await getAllParticipants());
+});
+
  	
 
 $(document).ready(async () => {
+    $(document).click(function(event) {
+        var target = $(event.target);
+        if (!target.closest('#boxSearch').length && !target.closest('#searchName').length) {
+            $('#boxSearch').removeClass("block");
+            $('#boxSearch').addClass("hidden");
+        }
+    });
+
    create_list_participants(await getAllParticipants());
    loadDataParticipant();
 });

@@ -11,7 +11,7 @@
 
   <link rel="stylesheet" href="/css/main.css">
 
-  <script src="/scripts/main.js"></script>
+  <script src="/scripts/main.js" defer></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,8 +41,13 @@
     <div class="mb-10 font-bold text-emphasis font-anton_sc text-4xl">SORCH</div>
     
    <div class="w-80">
-    <div>
+    <div class="relative">
         <input type="text" name="searchName" id="searchName" placeholder="Buscar..." class="w-full h-11 mb-20 pl-3 border border-black/50 rounded-lg">
+        <div id="boxSearch" class="hidden max-h-56 overflow-x-hidden absolute top-12 bg-white w-full shadow-lg rounded px-2 py-2">
+
+          <p class="msg-no-results text-center text-slate-500">Sem resultados</p>
+
+        </div>
     </div>
 
     <div class="flex justify-between">
