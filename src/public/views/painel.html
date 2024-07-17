@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,8 +36,16 @@
     }
   </script>
 </head>
-<body>
-  <div class="flex justify-center items-center flex-col mt-10">
+<body class="relative h-dvh">
+  <div id="loading" class="flex justify-center items-center flex-col z-10 text-white w-dvw h-dvh absolute bg-black/90">
+    <div>
+    <span class="material-symbols-outlined text-6xl">
+        progress_activity
+    </span>
+    </div>
+    <p class="font-bold text-base mt-8">Carregando...</p>
+</div>
+  <div class="flex justify-center items-center flex-col pt-10">
     <div class="mb-10 font-bold text-emphasis font-anton_sc text-4xl">SORCH</div>
     
    <div class="w-80">
@@ -89,6 +97,9 @@
     </div>
 
     <div class="flex flex-col my-11">
+      <div class="pb-2">
+        Total: <span id="amountParticipant" class="font-bold"></span>
+      </div>
         <div class="flex justify-between font-bold text-font_color">
             <p>Nome</p>
             <p>Presença</p>

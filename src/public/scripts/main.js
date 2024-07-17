@@ -62,16 +62,16 @@ function html_popup_alert(message){
     });
 }
 
-function html_loading(){
+function html_loading(message){
 
     let element = `
-        <div id="loading" class="flex justify-center items-center flex-col z-10 text-white w-screen h-screen absolute bg-black/90">
+        <div id="loading" class="flex justify-center items-center flex-col z-10 text-white w-dvw h-dvh absolute bg-black/90">
             <div>
             <span class="material-symbols-outlined text-6xl">
                 progress_activity
             </span>
             </div>
-            <p class="font-bold text-base mt-8">Salvando...</p>
+            <p class="font-bold text-base mt-8">${message}</p>
         </div>
     `;
 
@@ -80,6 +80,16 @@ function html_loading(){
 
 function remove_html_popup_alert(){
     $("#popupAlert").remove();
+}
+
+function remove_html_loading(){
+    $("#loading").remove();
+}
+
+async function loadListParticipant() {
+    let participants = await getAllParticipants()
+    await setTotalParticipants(participants.length);
+    await create_list_participants(participants);
 }
 
 /**
@@ -248,6 +258,10 @@ async function deleteParticipant(id) {
     }
 }
 
+async function setTotalParticipants(amount){
+    $("#amountParticipant").html(amount);
+}
+
 
 /**
  * 
@@ -324,7 +338,7 @@ function html_create_list_participants(participant) {
     });
 }
   
-function create_list_participants(participants) {
+async function create_list_participants(participants) {
 
     if(participants.length > 0) {
         $(".msg-no-participants").remove();
@@ -422,7 +436,7 @@ $("#updatePerson").on('click', () => {
         presence: hasAfterPseudoElement($("#presence")),
         draw_number: parseInt($("#sortNumber").val()),
     };
-    html_loading();
+    html_loading("Salvando...");
     updateParticipantFunc(getIdByParam(), user).then(()=>{
         window.location.href = '/views/painel.html';
     });
@@ -449,7 +463,7 @@ $("#searchName").on('keyup', async (event) => {
 
  	
 
-$(document).ready(async () => {
+$(document).ready(() => {
     $(document).click(function(event) {
         var target = $(event.target);
         if (!target.closest('#boxSearch').length && !target.closest('#searchName').length) {
@@ -458,6 +472,9 @@ $(document).ready(async () => {
         }
     });
 
-   create_list_participants(await getAllParticipants());
+    loadListParticipant().then((data)=>{
+        remove_html_loading(); 
+    });
+
    loadDataParticipant();
 });
