@@ -89,7 +89,7 @@ function remove_html_loading(){
 async function loadListParticipant() {
     let participants = await getAllParticipants()
     await setTotalParticipants(participants.length);
-    await create_list_participants(participants);
+    await create_list_participants(participants.sort((a, b) => a.name.localeCompare(b.name)));
 }
 
 /**
@@ -106,7 +106,7 @@ function validarNome(campoNome) {
       return false;
     }
   
-    const regexNome = /^[a-zA-ZÀ-ÁÇ-Ê-Í-Ó-Õ-Ú-Ü-à-áç-ê-í-ó-õ-ú-ü\s]+$/;
+    const regexNome = /^[a-ã-zA-ZÀ-ÁÇ-Ê-Í-Ó-Õ-Ú-Ü-à-áç-ê-í-ó-õ-ú-ü\s+]{2,}/;
     if (!regexNome.test(campoNome.val())) {
       campoNome.addClass("border-red-500");
       $("#msgErrorFielName").remove();
@@ -457,7 +457,7 @@ $("#registration").on('click', () => {
 
 $("#searchName").on('keyup', async (event) => {
     let participants = await getAllParticipants();
-    let participantsFiltered = participants.filter(e => e.name.toUpperCase().charAt() === event.target.value.toUpperCase())
+    let participantsFiltered = participants.filter(e => e.name.toUpperCase().includes(event.target.value.toUpperCase()))
     create_search_list_participants(participantsFiltered);
 });
 
