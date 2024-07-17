@@ -257,7 +257,7 @@ async function deleteParticipant(id) {
 
 function html_create_search_list_participants(participant) {
     let html = `
-        <div id="${participant.id}" class="flex justify-between px-2 pt-2 pb-2 rounded hover:bg-slate-200">
+        <div id="search_${participant._id}" class="flex justify-between px-2 pt-2 pb-2 rounded hover:bg-slate-200">
             <div class="name-participant w-full cursor-pointer">
                 ${participant.name}
             </div>
@@ -269,19 +269,18 @@ function html_create_search_list_participants(participant) {
 
     $("#boxSearch").append(html);
 
-    // $(`#${participant.id}`).on('click', (e) => {
-    //     if(e.target.classList[0] === "name-participant") {
-    //         let id = e.target.parentElement.id;
-
-    //         window.location.href = `/views/update.html?id=${id}`;
-    //     }
-    // });
+    $(`#search_${participant._id}`).on('click', (e) => {
+        updateParticipantPresence(participant._id, !participant.presence).then(()=>{
+            $(`#present_${participant._id}`).attr("checked", !participant.presence)
+        });
+    });
 }
 
 async function create_search_list_participants(participants) {
 
     $("#boxSearch").removeClass("hidden");
     $("#boxSearch").addClass("block");
+    $("#boxSearch").empty();
 
     if(participants.length > 0) {
         $(".msg-no-results").remove();
@@ -442,10 +441,10 @@ $("#registration").on('click', () => {
     }
 });
 
-$("#searchName").on('keyup', async (e) => {
-    // console.log(e.target.value);
-    $("#boxSearch").empty();
-    create_search_list_participants(await getAllParticipants());
+$("#searchName").on('keyup', async (event) => {
+    let participants = await getAllParticipants();
+    let participantsFiltered = participants.filter(e => e.name.toUpperCase().charAt() === event.target.value.toUpperCase())
+    create_search_list_participants(participantsFiltered);
 });
 
  	
