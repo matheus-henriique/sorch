@@ -66,7 +66,7 @@ function html_popup_confirm_clear_presence(message){
     if(!message)return;
 
     let element = `
-        <div id="popupAlert" class="flex justify-center items-center absolute w-full z-10 h-screen bg-black/90">
+        <div id="popupAlert" class="flex justify-center items-center absolute w-full z-10 h-full bg-black/90">
             <div class="flex justify-center items-center flex-col bg-white w-80 h-56 rounded-xl">
                 <p class="mb-9 text-font-color text-lg font-bold">
                     ${message}
