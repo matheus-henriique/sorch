@@ -569,17 +569,20 @@ function detectBottomScroll(element, callBack) {
     }
   }
 
-const myElement = document.getElementById('listParticipants');
-myElement.addEventListener('scroll', function() {
-    if(detectBottomScroll(this)){
-        if(!$("#loadingMorePeson").length ){
-            html_loading("#listParticipants");
-        } 
-        loadListParticipant().then(()=>{
-            remove_html_loading_more_person(); 
-        });
-    }
-});
+if(document.getElementById('listParticipants')){
+    const myElement = document.getElementById('listParticipants');
+    myElement.addEventListener('scroll', function() {
+        if(detectBottomScroll(this)){
+            if(!$("#loadingMorePeson").length ){
+                html_loading("#listParticipants");
+            } 
+            loadListParticipant().then(()=>{
+                remove_html_loading_more_person(); 
+            });
+        }
+    });
+}
+
 
  	
 
