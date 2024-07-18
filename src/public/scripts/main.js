@@ -62,6 +62,40 @@ function html_popup_alert(message){
     });
 }
 
+function html_popup_confirm_clear_presence(message){
+    if(!message)return;
+
+    let element = `
+        <div id="popupAlert" class="flex justify-center items-center absolute w-full z-10 h-screen bg-black/90">
+            <div class="flex justify-center items-center flex-col bg-white w-80 h-56 rounded-xl">
+                <p class="mb-9 text-font-color text-lg font-bold">
+                    ${message}
+                </p>
+                <div class="flex gap-4">
+                    <button id="confirmClearPresence" class="w-32 h-11 rounded-lg font-bold bg-black bg-emphasis text-white cursor-pointer">
+                        Confirmar
+                    </button>
+                    <button id="cancelClearPresence" class="w-32 h-11 rounded-lg font-bold bg-trasparent text-font_color border border-emphasis cursor-pointer">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    $('body').prepend(element);
+
+    $("#confirmClearPresence").on('click', () => {
+        updatePresenceToFalse().then(()=>{
+            window.location.reload();
+        });
+    });
+
+    $("#cancelClearPresence").on('click', () => {
+        remove_html_popup_alert();
+    });
+}
+
 function html_screen_loading(message, element){
 
     let html = `
@@ -193,7 +227,20 @@ function validarContato(campoContato) {
  *  CRUD PARTICIPANTS
  * 
  */
-const url = 'https://api-sorch.onrender.com/api/persons/';
+// const url = 'https://api-sorch.onrender.com/api/persons/';
+const url = 'http://localhost:3000/api/persons/';
+
+async function updatePresenceToFalse() {
+    try{
+        await $.ajax({
+          url: url + "update/presenceToFalse",
+          method: 'PUT',
+        });
+        
+    }catch(error){
+        console.log(error);
+    }
+}
 
 async function getAllParticipants() {
     try{
@@ -491,7 +538,7 @@ $("#updatePerson").on('click', () => {
 });
 
 $("#deletePerson").on('click', () => {
-    html_popup_alert("Nome será deletado!!");
+    html_popup_alert("Deseja deletar?");
 });
 
 $("#registration").on('click', () => {
@@ -501,6 +548,10 @@ $("#registration").on('click', () => {
             window.location.href = '/views/painel.html';
         })
     }
+});
+
+$("#clearPresence").on('click', () => {
+    html_popup_confirm_clear_presence("Todas as presenças são removidas!!!");
 });
 
 $("#searchName").on('keyup', async (event) => {
