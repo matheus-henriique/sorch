@@ -35,14 +35,13 @@
 </head>
 <body>
     <div class="headerSorteio flex justify-center items-center flex-col mt-10">
-        <div class="flex w-full max-w-xs mb-16">
+        <div class="flex w-full pl-16 mb-16">
           <a href="./painel.html" class="flex items-center">
             <span class="material-symbols-outlined text-start">
               arrow_back_ios
             </span>
           </a>
          
-          <div class="flex justify-center flex-1 font-bold text-emphasis font-anton_sc text-6xl">SORCH</div>
         </div>
       </div>
 
@@ -125,6 +124,10 @@
      * 
      * */
     const nomes = getPresentParticipants();
+    const nomesSorteados = [];
+
+    let currentName = null;
+    let currentIndice = null;
     let sorteando = false;
 
     function atualizarNumero() {
@@ -132,6 +135,9 @@
 
         if(nomes.length){
             const nome = nomes[indice].name;
+            currentName = nomes[indice];
+            currentIndice = indice;
+            
             document.getElementById("nameSorteado").innerHTML = nome;
         } else {
             document.getElementById("nameSorteado").innerHTML = "A lista de presença está vazia!!";
@@ -148,6 +154,8 @@
 
     function pararSorteio() {
         clearInterval(intervalo);
+        nomesSorteados.push(currentName);
+        nomes.splice(currentIndice, 1);
         sorteando = false;
     }
 
