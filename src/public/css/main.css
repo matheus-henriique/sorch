@@ -11,6 +11,9 @@
     border-color: theme('colors.font_color');
   }
 
+  .box{
+    height: calc(100dvh - 164px);
+  }
 
   .checkbox-custom {
     width: 1.5rem; /* Ajuste a largura conforme necessário */
