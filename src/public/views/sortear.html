@@ -97,14 +97,14 @@
     //     },
     // ];
 
-    const url = 'https://api-sorch.onrender.com/api/persons/';
+    const url = 'https://api-sorch.onrender.com/api/persons';
 
-    function getAllParticipants() {
+    function getPresentParticipants() {
         try{
             let result = null;
 
             $.ajax({
-                url: url,
+                url: url + "/present",
                 method: 'GET',
                 dataType: 'json',
                 async: false,
@@ -124,13 +124,18 @@
      SORTEIO
      * 
      * */
-    const nomes = getAllParticipants();
+    const nomes = getPresentParticipants();
     let sorteando = false;
 
     function atualizarNumero() {
         const indice = Math.floor(Math.random() * nomes.length);
-        const nome = nomes[indice].name;
-        document.getElementById("nameSorteado").innerHTML = nome;
+
+        if(nomes.length){
+            const nome = nomes[indice].name;
+            document.getElementById("nameSorteado").innerHTML = nome;
+        } else {
+            document.getElementById("nameSorteado").innerHTML = "A lista de presença está vazia!!";
+        }
     }
 
     function startSorteio() {
