@@ -35,12 +35,32 @@
 </head>
 <body>
     <div class="headerSorteio flex justify-center items-center flex-col mt-10">
-        <div class="flex w-full pl-16 mb-16">
+        <div class="flex justify-between w-full px-16 mb-16">
           <a href="./painel.html" class="flex items-center">
             <span class="material-symbols-outlined text-start">
               arrow_back_ios
             </span>
           </a>
+
+          <div class="relative">
+              <span id="openHistorySorteio" class="material-symbols-outlined text-3xl pr-2 cursor-pointer">
+                right_panel_open
+              </span>
+
+              <div id="historySorteio" class="hidden absolute top-0 right-0 w-56 border border-black rounded-md overflow-hidden">
+                <div class="flex justify-between items-center border border-b-black px-2">
+                    <p>Histórico</p>
+
+                    <span id="closeHistorySorteio" class="material-symbols-outlined text-3xl cursor-pointer">
+                        left_panel_open
+                      </span>
+                </div>
+
+                <div id="listHistory" class="max-h-[500px] overflow-x-hidden px-2 bg-white">
+                    
+                </div>
+              </div>
+          </div>
          
         </div>
       </div>
@@ -118,6 +138,24 @@
         }
     }
 
+
+    async function openHistory(){
+        $("#openHistorySorteio").addClass("hidden");
+        $("#historySorteio").removeClass("hidden");
+    } 
+
+    async function closeHistory(){
+        $("#historySorteio").addClass("hidden");
+        $("#openHistorySorteio").removeClass("hidden");
+    }
+
+    async function create_list_history(){
+        if(!nomesSorteados.length)return;
+
+        nomesSorteados.forEach(person => {
+            $("#listHistory").append(person.name);
+        })
+    }
     /*
      * 
      SORTEIO
@@ -156,6 +194,7 @@
         clearInterval(intervalo);
         nomesSorteados.push(currentName);
         nomes.splice(currentIndice, 1);
+        $("#listHistory").append(`<div class="border-b-2 border-b-slate p-1">${currentName.name}</div>`);
         sorteando = false;
     }
 
@@ -211,6 +250,14 @@
     function showHeaderSorteio(){
         $('.headerSorteio').removeClass("hidden");
     }
+
+    $("#closeHistorySorteio").on('click', () => {
+        closeHistory();
+    });
+
+    $("#openHistorySorteio").on('click', () => {
+        openHistory();
+    });
 
     $("#sortear").on('click', () => {
         startSorteio();
