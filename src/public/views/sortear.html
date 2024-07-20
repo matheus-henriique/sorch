@@ -10,6 +10,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/main.css">
 
+  <script src="/scripts/conffeti.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
@@ -139,6 +141,23 @@
     }
 
 
+    /*
+     * CONFFETI
+     * 
+     * */
+    
+    function start(){
+        setTimeout(function() {
+            confetti.start()
+        }, 10);
+    }
+
+    function stop(){
+        setTimeout(function() {
+            confetti.stop()
+        }, 2000);
+    }
+    
     async function openHistory(){
         $("#openHistorySorteio").addClass("hidden");
         $("#historySorteio").removeClass("hidden");
@@ -156,6 +175,7 @@
             $("#listHistory").append(person.name);
         })
     }
+
     /*
      * 
      SORTEIO
@@ -192,6 +212,8 @@
 
     function pararSorteio() {
         clearInterval(intervalo);
+        start();
+        stop();
         nomesSorteados.push(currentName);
         nomes.splice(currentIndice, 1);
         $("#listHistory").append(`<div class="border-b-2 border-b-slate p-1">${currentName.name}</div>`);
