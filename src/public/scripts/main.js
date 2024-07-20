@@ -541,7 +541,7 @@ $("#deletePerson").on('click', () => {
 });
 
 $("#registration").on('click', () => {
-    if( validarNome($("#userName")) && validarData($("#userDateBirth")) && validarContato($("#userContact")) ){
+    if( validarNome($("#userName")) && validarData($("#userDateBirth")) ){
 
         registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#sortNumber").val()).then(()=>{
             window.location.href = '/views/painel.html';
