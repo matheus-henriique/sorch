@@ -225,7 +225,8 @@ function validarContato(campoContato) {
  *  CRUD PARTICIPANTS
  * 
  */
-const url = 'https://api-sorch.onrender.com/api/persons/';
+// const url = 'https://api-sorch.onrender.com/api/persons/';
+const url = 'http://localhost:3000/api/persons/';
 
 async function updatePresenceToFalse() {
     try{
@@ -368,12 +369,19 @@ function html_create_search_list_participants(participant) {
                 ${participant.name}
             </div>
             <div>
-                <input type="checkbox" ${participant.presence ? "checked" : `presence='${participant.presence}'`} class="checkbox-custom">
+                <input id="presence_search_${participant._id}" type="checkbox" class="checkbox-custom">
             </div>
         </div>
     `;
 
     $("#boxSearch").append(html);
+
+    if(participant.presence){
+        $(`#presence_search_${participant._id}`).attr("checked", true);
+        $(`#presence_search_${participant._id}`).attr("presence", true);
+    } else {
+        $(`#presence_search_${participant._id}`).attr("presence", false);
+    }
 
     $(`#search_${participant._id}`).on('click', (e) => {
         console.log(e.target.classList[0]);
@@ -385,8 +393,19 @@ function html_create_search_list_participants(participant) {
         }
         
         if(e.target.classList[0] === "checkbox-custom") {
-            updateParticipantPresence(participant._id, !participant.presence).then(()=>{
-                $(`#present_${participant._id}`).attr("checked", !participant.presence)
+            let presenceValue = e.target.attributes['presence'].value;
+
+            if(presenceValue == "true"){
+                presenceValue = true;
+            } else {
+                presenceValue = false;
+            }
+
+            $(`#presence_search_${participant._id}`).attr("presence", !presenceValue);
+
+
+            updateParticipantPresence(participant._id, !presenceValue).then((data)=>{
+                window.location.reload();
             });
         }
 
@@ -427,6 +446,13 @@ function html_create_list_participants(participant) {
 
     $("#listParticipants").append(html);
 
+    if(participant.presence){
+        $(`#present_${participant._id}`).attr("checked", true);
+        $(`#present_${participant._id}`).attr("presence", true);
+    } else {
+        $(`#present_${participant._id}`).attr("presence", false);
+    }
+
     $(`#${participant._id}`).on('click', (e) => {
         if(e.target.classList[0] === "name-participant") {
             let id = e.target.parentElement.id;
@@ -436,9 +462,19 @@ function html_create_list_participants(participant) {
         
         if(e.target.classList[0] === "checkbox-custom") {
             let id = e.target.parentElement.parentElement.id;
-            let isPresent = e.target.attributes[2].value == "false" ? true : false;
+            let isPresent = e.target.attributes['presence'].value;
 
-            updateParticipantPresence(id, isPresent);
+            if(isPresent == "true"){
+                isPresent = false;
+            } else {
+                isPresent = true;
+            }
+
+            $(`#present_${participant._id}`).attr("presence", isPresent);
+
+            updateParticipantPresence(id, isPresent).then(()=>{
+                setTotalPresences();
+            });
         }
     });
 }
