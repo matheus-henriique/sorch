@@ -225,8 +225,7 @@ function validarContato(campoContato) {
  *  CRUD PARTICIPANTS
  * 
  */
-// const url = 'https://api-sorch.onrender.com/api/persons/';
-const url = 'http://localhost:3000/api/persons/';
+const url = 'https://api-sorch.onrender.com/api/persons/';
 
 async function updatePresenceToFalse() {
     try{
