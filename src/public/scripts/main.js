@@ -146,9 +146,7 @@ let amount = 20;
 
 async function loadListParticipant() {
     try{
-        let participants = await getLimitedParticipants(page*initial, amount);
-        page++;
-        initial = amount;
+        let participants = await getAllParticipants();
         await create_list_participants(participants.sort((a, b) => a.name.localeCompare(b.name)));
     } catch(error){
         console.log(error);
@@ -378,9 +376,22 @@ function html_create_search_list_participants(participant) {
     $("#boxSearch").append(html);
 
     $(`#search_${participant._id}`).on('click', (e) => {
-        updateParticipantPresence(participant._id, !participant.presence).then(()=>{
-            $(`#present_${participant._id}`).attr("checked", !participant.presence)
-        });
+        console.log(e.target.classList[0]);
+
+        if(e.target.classList[0] === "name-participant") {
+            let id = participant._id;
+            
+            window.location.href = `/views/update.html?id=${id}`;
+        }
+        
+        if(e.target.classList[0] === "checkbox-custom") {
+            updateParticipantPresence(participant._id, !participant.presence).then(()=>{
+                $(`#present_${participant._id}`).attr("checked", !participant.presence)
+            });
+        }
+
+
+        
     });
 }
 
@@ -490,8 +501,6 @@ function getIdByParam(){
 async function setValuesInput(fullName, dateOfBirth, contact, presence, drawNumber){
     if(!fullName || !dateOfBirth || !contact)return;
 
-    console.log({fullName, dateOfBirth, contact, presence, drawNumber});
-
     $("#userName").val(fullName)
     $("#userDateBirth").val(dateOfBirth)
     $("#userContact").val(contact)
@@ -513,6 +522,36 @@ async function loadDataParticipant(){
     } catch (error) {
         console.log(error);    
     }
+}
+
+async function getPresentParticipants() {
+    try{
+        let result = null;
+
+        $.ajax({
+            url: url + "/present",
+            method: 'GET',
+            dataType: 'json',
+            async: false,
+            success(res){
+                result = res;
+            }
+        });
+
+        return result;
+    } catch(error){
+        console.log(error);
+    }
+}
+
+async function setTotalPresences(){
+    getPresentParticipants().then((users)=>{
+        if(users){
+            $("#amountPresence").html(users.length);
+        } else {
+            $("#amountPresence").html(0);
+        }
+    });
 }
 
 
@@ -569,19 +608,19 @@ function detectBottomScroll(element, callBack) {
     }
   }
 
-if(document.getElementById('listParticipants')){
-    const myElement = document.getElementById('listParticipants');
-    myElement.addEventListener('scroll', function() {
-        if(detectBottomScroll(this)){
-            if(!$("#loadingMorePeson").length ){
-                html_loading("#listParticipants");
-            } 
-            loadListParticipant().then(()=>{
-                remove_html_loading_more_person(); 
-            });
-        }
-    });
-}
+// if(document.getElementById('listParticipants')){
+//     const myElement = document.getElementById('listParticipants');
+//     myElement.addEventListener('scroll', function() {
+//         if(detectBottomScroll(this)){
+//             if(!$("#loadingMorePeson").length ){
+//                 html_loading("#listParticipants");
+//             } 
+//             loadListParticipant().then(()=>{
+//                 remove_html_loading_more_person(); 
+//             });
+//         }
+//     });
+// }
 
 
  	
@@ -596,8 +635,10 @@ $(document).ready(() => {
     });
 
     loadTotalParticipants();
+    setTotalPresences();
+    html_loading("#listParticipants");
     loadListParticipant().then(()=>{
-        remove_html_loading(); 
+        remove_html_loading_more_person(); 
     });
 
    loadDataParticipant();
