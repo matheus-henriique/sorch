@@ -39,3 +39,12 @@
     border-width: 0 0.2rem 0.2rem 0;
     transform: rotate(45deg);
   }
+
+  .hiddenItem {
+    opacity: 0;
+  }
+
+  .visible {
+    opacity: 1;
+    transition: opacity .4s ease-in-out;
+  }

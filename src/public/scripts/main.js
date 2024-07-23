@@ -1,32 +1,26 @@
-// const participants = [
-//     {
-//         id: 0,
-//         name: "John Doe",
-//         date_of_birth: new Date("1990-01-01"),
-//         contact: "john.doe@example.com",
-//         presence: true,
-//         draw_number: 1,
-//         created_at: new Date()
-//     },
-//     {
-//         id: 1,
-//         name: "John Doe",
-//         date_of_birth: new Date("1990-01-01"),
-//         contact: "john.doe@example.com",
-//         presence: true,
-//         draw_number: 1,
-//         created_at: new Date()
-//     },
-//     {
-//         id: 2,
-//         name: "John Doe",
-//         date_of_birth: new Date("1990-01-01"),
-//         contact: "john.doe@example.com",
-//         presence: true,
-//         draw_number: 1,
-//         created_at: new Date()
-//     }
-// ];
+let width = window.innerWidth;
+
+function onResize(){
+    width = window.innerWidth;
+
+    html_input_search_name();
+}
+
+function detectBottomScroll(element, callBack) {
+    const scrollTop = element.scrollTop;
+    const scrollHeight = element.scrollHeight;
+    const clientHeight = element.clientHeight;
+  
+    if (scrollTop + clientHeight >= scrollHeight) {
+        return true;
+    }
+  }
+
+/**
+ * 
+ * COMPONENTS 
+ *  
+ */
 
 function html_popup_alert(message){
     if(!message)return;
@@ -592,6 +586,63 @@ async function setTotalPresences(){
 
 /**
  * 
+ * SEARCH NAME
+ * 
+ */
+
+async function searchName(event){
+    let participants = await getAllParticipants();
+    let participantsFiltered = participants.filter(e => e.name.toUpperCase().includes(event.target.value.toUpperCase()))
+    create_search_list_participants(participantsFiltered);
+}
+
+async function html_input_search_name(){
+    let htmlMobi = `
+        <div id="containerSearch" class="hiddenItem relative">
+            <input type="text" name="searchName" id="searchName" placeholder="Buscar..." class="w-full h-11 mb-10 pl-3 outline-none border-b-2 border-b-black/50 focus:outline-none focus:shadow">
+            <div id="boxSearch" class="hidden max-h-56 overflow-x-hidden absolute top-11 bg-white w-full shadow-lg rounded px-2 py-2">
+
+                <p class="msg-no-results text-center text-slate-500">Sem resultados</p>
+
+            </div>
+        </div>
+    `;
+
+    let htmlDesk = `
+        <div id="containerSearch" class="hiddenItem relative w-2/4">
+            <input type="text" name="searchName" id="searchName" placeholder="Buscar..." class="w-full h-11 pl-3 outline-none border-b-2 border-b-black/50 focus:outline-none focus:shadow">
+            <div id="boxSearch" class="hidden max-h-56 overflow-x-hidden absolute top-11 bg-white w-full shadow-lg rounded px-2 py-2">
+
+                <p class="msg-no-results text-center text-slate-500">Sem resultados</p>
+
+            </div>
+        </div>
+    `;
+
+    if(width >= 640 && $(".searchDesk").length == 0){
+
+        $(".searchMobi").remove();
+        $("#logo").after(htmlDesk);
+        $("#containerSearch").addClass("searchDesk");
+    } else if(width < 640 && $(".searchMobi").length == 0){
+        
+        $(".searchDesk").remove();
+        $("main").prepend(htmlMobi);
+        $("#containerSearch").addClass("searchMobi");
+    }
+    
+    $("#containerSearch")[0].offsetHeight;
+    $("#containerSearch").addClass("visible");
+    
+    $("#searchName").on('keyup', (event) => {
+        searchName(event);
+    });
+
+}
+
+
+/**
+ * 
  *  EVENTS OF THE CLICK
  * 
  */
@@ -627,21 +678,7 @@ $("#clearPresence").on('click', () => {
     html_popup_confirm_clear_presence("Todas as presenças são removidas!!!");
 });
 
-$("#searchName").on('keyup', async (event) => {
-    let participants = await getAllParticipants();
-    let participantsFiltered = participants.filter(e => e.name.toUpperCase().includes(event.target.value.toUpperCase()))
-    create_search_list_participants(participantsFiltered);
-});
-
-function detectBottomScroll(element, callBack) {
-    const scrollTop = element.scrollTop;
-    const scrollHeight = element.scrollHeight;
-    const clientHeight = element.clientHeight;
-  
-    if (scrollTop + clientHeight >= scrollHeight) {
-        return true;
-    }
-  }
+window.addEventListener("resize", onResize);
 
 // if(document.getElementById('listParticipants')){
 //     const myElement = document.getElementById('listParticipants');
@@ -676,5 +713,6 @@ $(document).ready(() => {
         remove_html_loading_more_person(); 
     });
 
+    html_input_search_name();
    loadDataParticipant();
 });

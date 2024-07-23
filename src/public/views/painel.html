@@ -47,18 +47,21 @@
     </div>
     <p class="font-bold text-base mt-8">Carregando...</p>
 </div> -->
-  <div class="flex justify-center items-center flex-col pt-10">
-    <div class="mb-10 font-bold text-emphasis font-anton_sc text-4xl">SORCH</div>
-    
-   <div class="w-80">
-    <div class="relative">
-        <input type="text" name="searchName" id="searchName" placeholder="Buscar..." class="w-full h-11 mb-20 pl-3 border border-black/50 rounded-lg">
-        <div id="boxSearch" class="hidden max-h-56 overflow-x-hidden absolute top-12 bg-white w-full shadow-lg rounded px-2 py-2">
+  <div class="flex justify-center items-center flex-col">
 
-          <p class="msg-no-results text-center text-slate-500">Sem resultados</p>
-
-        </div>
+    <div class="w-full px-10 py-5 flex justify-between items-center mb-10 shadow">
+      <div id="logo" class="font-bold text-emphasis font-anton_sc text-4xl">SORCH</div>
+  
+      <div class="text-font_color cursor-pointer">
+        <a href="/index.html">
+            <span class="material-symbols-outlined text-4xl">
+                logout
+            </span>
+        </a>
+      </div>
     </div>
+    
+   <main class="w-80">
 
     <div class="flex justify-between">
         <a href="./registration.html">
@@ -118,15 +121,7 @@
                 <!-- <p class="msg-no-participants text-center mt-5">Sem participantes</p> -->
         </div>
     </div>
-   </div>
-  </div>
-  
-  <div class="text-font_color cursor-pointer">
-    <a href="/index.html">
-        <span class="material-symbols-outlined text-4xl absolute right-5 bottom-5">
-            logout
-        </span>
-    </a>
+   </main>
   </div>
 </body>
 </html>
