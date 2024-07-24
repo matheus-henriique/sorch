@@ -666,7 +666,7 @@ $("#deletePerson").on('click', () => {
 });
 
 $("#registration").on('click', () => {
-    if( validarNome($("#userName")) && validarData($("#userDateBirth")) ){
+    if( validarNome($("#userName")) ){
 
         registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#sortNumber").val()).then(()=>{
             window.location.href = '/views/painel.html';
@@ -676,6 +676,16 @@ $("#registration").on('click', () => {
 
 $("#clearPresence").on('click', () => {
     html_popup_confirm_clear_presence("Todas as presenças são removidas!!!");
+});
+
+$("#userDateBirth").on('keyup', (e) => {
+    // let data = e.target.value;
+
+    // if(data.length == 2){
+    //     data = `${data}-`;
+    //     $("#userDateBirth").val(data);
+    // }
+    // console.log(data);
 });
 
 window.addEventListener("resize", onResize);
@@ -713,6 +723,8 @@ $(document).ready(() => {
         remove_html_loading_more_person(); 
     });
 
-    html_input_search_name();
+    if(window.location.pathname == "/src/public/views/painel.html" || window.location.pathname == "/views/painel.html"){
+        html_input_search_name();
+    }
    loadDataParticipant();
 });
