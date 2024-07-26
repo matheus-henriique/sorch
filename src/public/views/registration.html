@@ -7,7 +7,6 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script src="/scripts/main.js" defer></script>
   <link rel="stylesheet" href="/css/main.css">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -74,4 +73,42 @@
     </div>
   </div>
 </body>
+<script src="/scripts/main.js"></script>
+<script>
+  /**
+   * 
+   *  REGISTRATION
+   * 
+   */
+
+  async function registration(fullName, dateOfBirth, contact, drawNumber) {
+      if(!fullName || !dateOfBirth || !contact)return;
+
+      const user = {
+          name: fullName,
+          date_of_birth: dateOfBirth,
+          contact: contact,
+          presence: hasAfterPseudoElement($("#presence")),
+          draw_number: parseInt(drawNumber),
+      };
+
+      await addNewParticipant(user);
+  }
+
+
+  /**
+   * 
+   *  EVENTS OF THE CLICK
+   * 
+   */
+
+  $("#registration").on('click', () => {
+    if( validarNome($("#userName")) ){
+
+        registration($("#userName").val(), $("#userDateBirth").val(), $("#userContact").val(), $("#sortNumber").val()).then(()=>{
+            window.location.href = '/views/painel.html';
+        })
+    }
+  });
+</script>
 </html>

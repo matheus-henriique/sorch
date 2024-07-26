@@ -7,7 +7,6 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script src="/scripts/main.js" defer></script>
   <link rel="stylesheet" href="/css/main.css">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -82,4 +81,75 @@
     </div>
   </div>
 </body>
+
+<script src="/scripts/main.js"></script>
+<script>
+  /**
+   * 
+   *  UPDATE
+   * 
+   */
+
+  let updateParticipant = null; 
+
+  function getIdByParam(){
+      return window.location.search.split("=")[1];
+  }
+
+  async function setValuesInput(fullName, dateOfBirth, contact, presence, drawNumber){
+      if(!fullName || !dateOfBirth || !contact)return;
+
+      $("#userName").val(fullName)
+      $("#userDateBirth").val(dateOfBirth)
+      $("#userContact").val(contact)
+
+      if(drawNumber) $("#sortNumber").val(drawNumber)
+      if(presence) $('input[type="checkbox"]').prop('checked', true);
+  }
+
+  async function loadDataParticipant(){
+      // if(window.location.pathname !== "/views/update.html") return;
+
+      try {
+          let idParticipant = getIdByParam();
+
+          if(idParticipant == null) return;
+          
+          updateParticipant = await getParticipantById(idParticipant);
+          setValuesInput(updateParticipant.name, updateParticipant.date_of_birth, updateParticipant.contact, updateParticipant.presence, updateParticipant.draw_number);
+      } catch (error) {
+          console.log(error);    
+      }
+  }
+  
+  
+  /**
+   * 
+   *  EVENTS OF THE CLICK
+   * 
+   */
+
+  $("#updatePerson").on('click', () => {
+      const user = {
+          name: $("#userName").val(),
+          date_of_birth: $("#userDateBirth").val(),
+          contact: $("#userContact").val(),
+          presence: hasAfterPseudoElement($("#presence")),
+          draw_number: parseInt($("#sortNumber").val()),
+      };
+      html_screen_loading("Salvando...", 'body');
+      updateParticipantFunc(getIdByParam(), user).then(()=>{
+          window.location.href = '/views/painel.html';
+      });
+  });
+
+  $("#deletePerson").on('click', () => {
+      html_popup_alert("Deseja deletar?");
+  });
+
+  $(document).ready(() => {
+    loadDataParticipant();
+  });
+</script>
+
 </html>
