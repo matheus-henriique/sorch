@@ -33,7 +33,7 @@
     }
   </script>
 </head>
-<body class="bg-[url('../images/bg-station.jpg')] bg-cover">
+<body class="bg-[url('/images/bg-station.jpg')] bg-cover">
     <div class="headerSorteio flex justify-center items-center flex-col mt-10">
         <div class="flex justify-between w-full px-16 mb-16">
           <a href="./painel.html" class="flex items-center">
@@ -170,7 +170,7 @@
         if (!sorteando) {
             sorteando = true;
             intervalo = setInterval(atualizarNumero, 50);
-            setTimeout(pararSorteio, 10000);
+            setTimeout(pararSorteio, 4000);
         }
     }
 

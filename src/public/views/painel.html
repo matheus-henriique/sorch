@@ -51,7 +51,7 @@
     
    <main class="w-80">
 
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-11">
         <a href="./registration.html">
         <div class="w-16 text-center cursor-pointer">
             <button class="w-full h-16 bg-emphasis flex justify-center items-center rounded-lg text-white">
@@ -92,7 +92,22 @@
         </div>
     </div>
 
-    <div class="flex flex-col my-11">
+
+    <div class="relative">
+      <div id="filter" class="flex items-center gap-1 cursor-pointer">
+        <div>
+          <span class="material-symbols-outlined">filter_list</span>
+        </div>
+        <p class="font-bold">Filtro</p>
+      </div>
+
+      <div id="optionsFilter" class="hidden absolute bg-white border w-fit p-2 rounded shadow-lg">
+        <div id="orderByDefault" class="itemFilter p-2 cursor-pointer rounded hover:bg-slate-200">Padrão</div>
+        <div id="orderByPresence" class="itemFilter p-2 cursor-pointer rounded hover:bg-slate-200">Presença</div>
+      </div>
+    </div>
+
+    <div class="flex flex-col mt-5 mb-11">
       <div class="pb-2 flex justify-between">
         <div>
           Total: <span id="amountParticipant" class="font-bold"></span>
@@ -115,9 +130,20 @@
 <script src="/scripts/main.js"></script>
 <script>
   async function loadListParticipant() {
+    html_loading("#listParticipants");
     try{
         let participants = await getAllParticipants();
         await create_list_participants(participants.sort((a, b) => a.name.localeCompare(b.name)));
+    } catch(error){
+        console.log(error);
+    }
+  }
+
+  async function loadListParticipantByPresence() {
+    html_loading("#listParticipants");
+    try{
+        let participants = await getAllParticipantsOrderByPresence();
+        await create_list_participants(participants);
     } catch(error){
         console.log(error);
     }
@@ -413,6 +439,30 @@
     html_popup_confirm_clear_presence("Todas as presenças são removidas!!!");
   });
 
+  $("#filter").on('click', () => {
+
+    $("#optionsFilter").toggle();
+  });
+
+  $(".itemFilter").on('click', async (e) => {
+    $("#optionsFilter").toggle();
+    $("#listParticipants").html("")
+    let id = e.target.id;
+
+    if(id === "orderByDefault"){
+      loadListParticipant().then(()=>{
+        remove_html_loading_more_person(); 
+      });
+      
+    } else if(id === "orderByPresence"){
+      loadListParticipantByPresence().then(()=>{
+        remove_html_loading_more_person(); 
+      });
+    }
+  });
+
+
+
   $(document).ready(() => {
     $(document).click(function(event) {
         var target = $(event.target);
@@ -424,7 +474,6 @@
 
     loadTotalParticipants();
     setTotalPresences();
-    html_loading("#listParticipants");
     loadListParticipant().then(()=>{
         remove_html_loading_more_person(); 
     });

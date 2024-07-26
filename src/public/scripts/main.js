@@ -193,6 +193,20 @@ async function getAllParticipants() {
     }
 }
 
+async function getAllParticipantsOrderByPresence() {
+    try{
+        const res = await $.ajax({
+          url: url + "/persons/bypresence",
+          method: 'GET',
+          dataType: 'json',
+        });
+
+        return res;
+    } catch(error){
+        console.log(error);
+    }
+}
+
 async function getLimitedParticipants(initial, amount) {
     try{
         const res = await $.ajax({
